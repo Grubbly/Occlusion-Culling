@@ -26,8 +26,8 @@ var vertex_shader = `
     vecNormal = mat3(uModel) * normal;
     gl_Position = uScene.viewProj * worldPosition;
   }
-`;
+`
 
 function outputShader() {
-  document.getElementsByClassName('main')[0].innerHTML = "<h1> Occlusion Culling </h1>";
+  document.getElementsByClassName('main')[0].innerHTML = "<h1> Occlusion Culling </h1>" + vertex_shader;
 }
