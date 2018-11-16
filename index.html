@@ -88,10 +88,10 @@
         }
 
         var hudViewport = [
+            gl.drawingBufferWidth/1.5,
             0,
-            0,
-            gl.drawingBufferWidth / 5,
-            gl.drawingBufferHeight / 5
+            gl.drawingBufferWidth / 3,
+            gl.drawingBufferHeight / 3
         ];
 
         gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
@@ -307,7 +307,7 @@
         mat4.perspective(projMatrixAssistCam, Math.PI / 2, gl.drawingBufferWidth / gl.drawingBufferHeight, 0.1, 100.0);
 
         var viewMatrixAssistCam = mat4.create();
-        var eyePositionAssistCam = vec3.fromValues(0, 10, 0);
+        var eyePositionAssistCam = vec3.fromValues(0, 15, 0);
         mat4.lookAt(viewMatrixAssistCam, eyePositionAssistCam, vec3.fromValues(0, 0, 0), vec3.fromValues(0, 0, -1));
 
         var viewProjMatrixAssistCam = mat4.create();
