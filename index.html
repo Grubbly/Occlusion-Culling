@@ -50,6 +50,7 @@
     <script src="../js/fragment_boundingBox.js"></script>
     <script src="../js/vertex_hud.js"></script>
     <script src="../js/fragment_hud.js"></script>
+    <script src="../js/fragment_hud_occluded.js"></script>
 </head>
 <body>
     <canvas id="gl-canvas"></canvas>
@@ -160,6 +161,7 @@
 
         var hudVSSource =  vertex_hud.trim();
         var hudFSSoure =  fragment_hud.trim();
+        var hudFSSoureOccluded = fragment_hud_occluded.trim();
 
         var hudVertexShader = gl.createShader(gl.VERTEX_SHADER);
         gl.shaderSource(hudVertexShader, hudVSSource);
@@ -177,9 +179,18 @@
             console.error(gl.getShaderInfoLog(hudFragmentShader));
         }
 
+        var hudFragmentShaderOccluded = gl.createShader(gl.FRAGMENT_SHADER);
+        gl.shaderSource(hudFragmentShaderOccluded, hudFSSoureOccluded);
+        gl.compileShader(hudFragmentShaderOccluded);
+
+        if (!gl.getShaderParameter(hudFragmentShaderOccluded, gl.COMPILE_STATUS)) {
+            console.error(gl.getShaderInfoLog(hudFragmentShaderOccluded));
+        }
+
         var hudProgram = gl.createProgram();
         gl.attachShader(hudProgram, hudVertexShader);
         gl.attachShader(hudProgram, hudFragmentShader);
+        gl.attachShader(hudProgram, hudFragmentShaderOccluded);
         gl.linkProgram(hudProgram);
 
         if (!gl.getProgramParameter(hudProgram, gl.LINK_STATUS)) {
@@ -203,6 +214,7 @@
         // Hud program locations
         var hudViewProjLocation = gl.getUniformLocation(hudProgram, "uViewProj");
         var hudModelMatrixLocation = gl.getUniformLocation(hudProgram, "uModel");
+        var hudModelMatrixLocationOccluded = gl.getUniformLocation(hudProgram, "name");
 
         /////////////////////
         // SET UP GEOMETRY
@@ -401,7 +413,7 @@
 
                 // Note: Sort based on previous frame's transformations
                 // if (occlusionCullingEnabled) {
-                    spheres.sort(depthSort);
+                spheres.sort(depthSort);
                 // }
 
                 gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
@@ -488,6 +500,10 @@
                             gl.bindVertexArray(sphere.vertexArray);
                             gl.uniformMatrix4fv(hudModelMatrixLocation, false, sphere.modelMatrix);
                             gl.drawElements(gl.TRIANGLES, sphere.numElements, gl.UNSIGNED_SHORT, 0);
+                        } else {
+                            // gl.bindVertexArray(sphere.vertexArray);
+                            // gl.uniformMatrix4fv(hudModelMatrixLocation, false, sphere.modelMatrix);
+                            // gl.drawElements(gl.TRIANGLES, sphere.numElements, gl.UNSIGNED_SHORT, 0);
                         }
                     }
                     gl.disable(gl.SCISSOR_TEST);
