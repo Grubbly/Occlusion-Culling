@@ -8,6 +8,6 @@ var fragment_hud = `
   out vec4 fragColor;
 
   void main() {
-    fragColor = vec4(1.0, 1.0, 0.0, 0.2);
+    fragColor = vec4(1.0, 0.0, 0.0, 0.2);
   }
 `
