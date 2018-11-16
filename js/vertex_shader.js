@@ -27,3 +27,7 @@ var vertex_shader = `
     gl_Position = uScene.viewProj * worldPosition;
   }
 `;
+
+function outputShader() {
+  document.getElementsByClassName('main')[0].innerHTML = "<h1> Occlusion Culling </h1>";
+}
