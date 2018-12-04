@@ -2,3 +2,21 @@
   background-color: coral;
   text-align: center;
 }
+
+.variable_form {
+    position: absolute;
+    bottom: 50%;
+    right: 20px;
+    background-color: #4c7f99;
+    display: flex;
+    justify-content: space-between;
+    margin-left: auto;
+}
+
+.form_input {
+    background-color: #4c7f99;
+    color: orange;
+    text-align: center;
+    font-size: 25px;
+    border-radius: 25px;
+}

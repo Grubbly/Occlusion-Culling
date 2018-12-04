@@ -1,3 +1,4 @@
+var first = true
 function initialize() {
 
     var occlusionCullingEnabled = true;
@@ -127,9 +128,10 @@ function initialize() {
     }
 
     var hudProgram = gl.createProgram();
+
     gl.attachShader(hudProgram, hudVertexShader);
     gl.attachShader(hudProgram, hudFragmentShader);
-    gl.attachShader(hudProgram, hudFragmentShaderOccluded);
+    //gl.attachShader(hudProgram, hudFragmentShaderOccluded);
     gl.linkProgram(hudProgram);
 
     if (!gl.getProgramParameter(hudProgram, gl.LINK_STATUS)) {
@@ -207,12 +209,17 @@ function initialize() {
     // Object definitions
     var GRID_DIM = 9;
     var GRID_OFFSET = GRID_DIM / 1 - 6.5;
-    var NUM_SPHERES = GRID_DIM * GRID_DIM;
+    var NUM_SPHERES = sphere_count;
     var spheres = new Array(NUM_SPHERES);
     for(var k = 0; k < 5; ++k) {
     for (var i = 0; i < NUM_SPHERES; ++i) {
         var x = Math.floor(i / GRID_DIM) - GRID_OFFSET-5;
         var z = i % GRID_DIM/2 - GRID_OFFSET - 2;
+        if(pattern === 1)
+        {
+            x = ((i) / GRID_DIM) - GRID_OFFSET;
+            z = Math.cos(i) % GRID_DIM - GRID_OFFSET - 2;
+        }
 
         spheres[i] = {
             rotate: [0, z, z], // Will be used for global rotation
@@ -246,7 +253,7 @@ function initialize() {
     mat4.perspective(projMatrix, Math.PI / 2, gl.drawingBufferWidth / gl.drawingBufferHeight, 0.1, 100.0);
 
     var viewMatrix = mat4.create();
-    var eyePosition = vec3.fromValues(0, 0, 5);
+    var eyePosition = vec3.fromValues(pan, pan, zoom);
     mat4.lookAt(viewMatrix, eyePosition, vec3.fromValues(0, 0, 0), vec3.fromValues(0, 1, 0));
 
     var viewProjMatrix = mat4.create();
@@ -257,8 +264,8 @@ function initialize() {
     mat4.perspective(projMatrixAssistCam, Math.PI / 2, gl.drawingBufferWidth / gl.drawingBufferHeight, 0.1, 100.0);
 
     var viewMatrixAssistCam = mat4.create();
-    var eyePositionAssistCam = vec3.fromValues(0, 15, 0);
-    mat4.lookAt(viewMatrixAssistCam, eyePositionAssistCam, vec3.fromValues(0, 0, 0), vec3.fromValues(0, 0, -1));
+    var eyePositionAssistCam = vec3.fromValues(pan, 15, pan);
+    mat4.lookAt(viewMatrixAssistCam, eyePositionAssistCam, vec3.fromValues(0, -10, 0), vec3.fromValues(0, 0, -1));
 
     var viewProjMatrixAssistCam = mat4.create();
     mat4.multiply(viewProjMatrixAssistCam, projMatrixAssistCam, viewMatrixAssistCam);
@@ -366,8 +373,9 @@ function initialize() {
                 boundingBox = sphere.boundingBox;
 
                 // Update transforms
-                sphere.rotate[1] += 0.003;
-                sphere.rotate[2] += 0.003;
+                //sphere.rotate[1] += 0.003;
+                sphere.rotate[2] += _speed;
+                console.log(_speed);
 
                 utils.xformMatrix(sphere.modelMatrix, sphere.translate, null, sphere.scale);
                 mat4.fromXRotation(rotationMatrix, sphere.rotate[2]);

@@ -32,12 +32,13 @@
     <meta charset="utf-8">
     <script src="utils/gl-matrix.js"></script>
     <script src="utils/utils.js"></script>
-    <link rel="stylesheet" href="css/webgl2examples.css">
+    <link rel="stylesheet" href="css/occlusion.css">
     <style>
         #occlusion-controls {
             position: absolute;
             bottom: 20px;
             right: 20px;
+            font-size: 25px;
             color: orange;
         }
     </style>
@@ -55,12 +56,56 @@
 
     <script>
         var radius = 0.4;
-        var sphere = utils.createSphere({ radius: radius , lat_bands: 25, long_bands: 25});
-        function changeRadius() {
-            console.log("Radius: " + radius);
-            radius = document.getElementById("size").value;
-            sphere = utils.createSphere({ radius: radius , lat_bands: 25, long_bands: 25});
+        var num_lat_bands = 25;
+        var num_long_bands = 25;
+        var _speed = 0.004;
+        var zoom = 5;
+        var pan = 0;
+        var pattern = 0;
+        var sphere_count = 81;
+    </script>
+
+    <script>
+        var sphere = utils.createSphere({ radius: radius , lat_bands: num_lat_bands, long_bands: num_long_bands});
+
+        function update() {
+            sphere = utils.createSphere({ radius: radius , lat_bands: num_lat_bands, long_bands: num_long_bands});
             initialize();
+        }
+
+        function changeRadius() {
+            radius = document.getElementById("size").value;
+            update();
+        }
+
+        function changeSphereCount() {
+            sphere_count = document.getElementById("sphere_count").value;
+            update();
+        }
+
+        function changeZoom() {
+            zoom = document.getElementById("zoom").value;
+            update();
+        }
+
+        function changePan(val) {
+            pan = val;
+            update();
+        }
+
+        function changePattern(val) {
+            pattern = val;
+            update();
+        }
+
+        function changeLatBands() {
+            num_lat_bands = document.getElementById("lat").value;
+            update();
+        }
+
+        function changeLongBands() {
+            num_long_bands = document.getElementById("long").value;
+            update();
         }
     </script>
 </head>
@@ -71,12 +116,35 @@
         Culled Objects: <span id="num-invisible-spheres"></span><br>
         <!-- Enable occlusion culling: <input id="occlusion-toggle" type="checkbox" checked><br>
         Top-down HUD: <input id="hud-toggle" type="checkbox" checked> -->
-        <form>
+    </div>
+    <div id="variables" class="variable_form">
+        <form class="form_input">
           Size:<br>
-          <input id="size" type="text" name="size" onChange="changeRadius()">
+          <input class="form_input" id="size" type="text" name="size" value="0.4" onChange="changeRadius()">
           <br>
-          Speed:<br>
-          <input id="speed" type="text" name="speed" onchange="formChange()">
+          Sphere Count:<br>
+          <input class="form_input" id="sphere_count" type="text" name="size" value="81" onChange="changeSphereCount()">
+          <br>
+          Zoom:<br>
+          <input class="form_input" id="zoom" type="text" name="speed" value="5" onChange="changeZoom()">
+          <br>
+          Perspective:<br>
+          <input class="form_input" id="perspective" type="button" name="speed" value="0" onclick="changePan(0)">
+          <input class="form_input" id="perspective" type="button" name="speed" value="1" onclick="changePan(5)">
+          <input class="form_input" id="perspective" type="button" name="speed" value="2" onclick="changePan(10)">
+          <input class="form_input" id="perspective" type="button" name="speed" value="3" onclick="changePan(-10)">
+          <input class="form_input" id="perspective" type="button" name="speed" value="4" onclick="changePan(-15)">
+          <br>
+          Pattern:<br>
+          <input class="form_input" id="perspective" type="button" name="speed" value="0" onclick="changePattern(0)">
+          <input class="form_input" id="perspective" type="button" name="speed" value="1" onclick="changePattern(1)">
+          <br>
+          Latitude Bands:<br>
+          <input class="form_input" id="lat" type="text" name="lat" value="25" onchange="changeLatBands()">
+          <br>
+          Longitude Bands:<br>
+          <input class="form_input" id="long" type="text" name="long" value="25" onchange="changeLongBands()">
+          <br>
         </form>
     </div>
     <script type="text/javascript">
